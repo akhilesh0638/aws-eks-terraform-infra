@@ -19,39 +19,9 @@ This repository defines the AWS infrastructure layer for the **ShopSphere** e-co
 
 ## 🏗️ Architecture
 
-```
-                                   ┌─────────────────────────────┐
-                                   │        Internet Gateway     │
-                                   └──────────────┬───────────────┘
-                                                  │
-                        ┌─────────────────────────┴─────────────────────────┐
-                        │                       VPC (10.0.0.0/16)            │
-                        │                                                     │
-        ┌───────────────┴───────────────┐               ┌────────────────────┴──────────────┐
-        │   Public Subnet 1 (AZ-a)       │               │    Public Subnet 2 (AZ-b)          │
-        │   10.0.1.0/24                  │               │    10.0.2.0/24                     │
-        │   NAT Gateway + EIP            │               │                                    │
-        └───────────────┬───────────────┘               └────────────────────┬──────────────┘
-                        │                                                     │
-                        └─────────────────────────┬─────────────────────────┘
-                                                  │  (Private Route Table → NAT)
-                        ┌─────────────────────────┴─────────────────────────┐
-                        │                                                     │
-        ┌───────────────┴───────────────┐               ┌────────────────────┴──────────────┐
-        │  Private Subnet 1 (AZ-a)       │               │   Private Subnet 2 (AZ-b)          │
-        │  10.0.3.0/24                   │               │   10.0.4.0/24                      │
-        │                                 │               │                                    │
-        │   ┌─────────────────────────────────────────────────────────────┐                   │
-        │   │              Amazon EKS Cluster (v1.35)                     │                   │
-        │   │              devops-node-group (t2.large, 1–3 nodes)        │                   │
-        │   └─────────────────────────────────────────────────────────────┘                   │
-        │                                 │               │                                    │
-        │   ┌─────────────────────────┐   │               │  ┌─────────────────────────┐       │
-        │   │  RDS MySQL 8.0          │◄──┴───────────────┴──┤  (DB Subnet Group)       │       │
-        │   │  db.t3.micro            │                      │                          │       │
-        │   └─────────────────────────┘                      └─────────────────────────┘       │
-        └───────────────────────────────┘               └────────────────────────────────┘
-```
+![AWS EKS Infrastructure Architecture](assets/architecture.svg)
+
+The VPC spans two Availability Zones (`ap-south-1a` / `ap-south-1b`). Public subnets host a single NAT Gateway that provides outbound internet access to both private subnets. The EKS control plane manages a managed node group running across both private subnets, which in turn connects to a private RDS MySQL instance on port 3306 — reachable only from EKS worker nodes via a dedicated security group.
 
 ---
 

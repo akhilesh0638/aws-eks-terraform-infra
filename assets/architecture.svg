@@ -1,0 +1,106 @@
+<svg width="1000" height="900" viewBox="0 0 1000 900" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="1000" height="900" fill="#FFFFFF"/>
+
+  <text x="500" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="#16191F">AWS EKS infrastructure architecture</text>
+  <text x="500" y="52" text-anchor="middle" font-size="13" fill="#5F6B7A">Region: ap-south-1  ·  VPC CIDR: 10.0.0.0/16</text>
+
+  <!-- AWS Cloud boundary -->
+  <rect x="30" y="75" width="940" height="775" rx="14" fill="#FFFBF5" stroke="#FF9900" stroke-width="2" stroke-dasharray="8 5"/>
+  <text x="50" y="100" font-size="14" font-weight="700" fill="#B36B00">AWS Cloud</text>
+
+  <!-- Legend -->
+  <rect x="800" y="90" width="14" height="14" rx="3" fill="#E8F4FD" stroke="#2E7DD1" stroke-width="1.5"/>
+  <text x="822" y="101" font-size="10" fill="#5F6B7A">Public subnet</text>
+  <rect x="800" y="110" width="14" height="14" rx="3" fill="#E8F8ED" stroke="#3C9A3C" stroke-width="1.5"/>
+  <text x="822" y="121" font-size="10" fill="#5F6B7A">Private subnet</text>
+  <rect x="800" y="130" width="14" height="14" rx="3" fill="none" stroke="#3C9A3C" stroke-width="1.2" stroke-dasharray="3 2"/>
+  <text x="822" y="141" font-size="10" fill="#5F6B7A">Security group</text>
+
+  <!-- Internet Gateway icon (cloud) -->
+  <g>
+    <ellipse cx="470" cy="145" rx="22" ry="18" fill="#FFFFFF" stroke="#FF9900" stroke-width="2"/>
+    <ellipse cx="500" cy="132" rx="28" ry="22" fill="#FFFFFF" stroke="#FF9900" stroke-width="2"/>
+    <ellipse cx="532" cy="145" rx="22" ry="18" fill="#FFFFFF" stroke="#FF9900" stroke-width="2"/>
+    <rect x="468" y="140" width="66" height="24" rx="12" fill="#FFFFFF" stroke="#FF9900" stroke-width="2"/>
+  </g>
+  <text x="500" y="184" text-anchor="middle" font-size="12" fill="#5F6B7A">Internet gateway</text>
+
+  <!-- Arrow IGW -> VPC -->
+  <line x1="500" y1="191" x2="500" y2="206" stroke="#5F6B7A" stroke-width="1.5"/>
+  <polygon points="500,212 495,203 505,203" fill="#5F6B7A"/>
+
+  <!-- VPC -->
+  <rect x="60" y="210" width="880" height="610" rx="12" fill="#F5F9FF" stroke="#232F3E" stroke-width="2"/>
+  <text x="80" y="235" font-size="14" font-weight="700" fill="#232F3E">Virtual Private Cloud  ·  10.0.0.0/16</text>
+
+  <!-- EKS control plane -->
+  <rect x="380" y="255" width="240" height="55" rx="10" fill="#232F3E"/>
+  <text x="500" y="278" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">Amazon EKS control plane</text>
+  <text x="500" y="296" text-anchor="middle" font-size="11" fill="#B7C2CE">Kubernetes v1.35</text>
+
+  <!-- AZ boundaries -->
+  <rect x="90" y="330" width="400" height="350" rx="10" fill="none" stroke="#9AA5B1" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="105" y="350" font-size="12" font-weight="700" fill="#5F6B7A">Availability zone A  ·  ap-south-1a</text>
+
+  <rect x="510" y="330" width="400" height="350" rx="10" fill="none" stroke="#9AA5B1" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="525" y="350" font-size="12" font-weight="700" fill="#5F6B7A">Availability zone B  ·  ap-south-1b</text>
+
+  <!-- Curved connectors: control plane -> node groups -->
+  <path d="M440,310 C 380,380 320,460 292,522" fill="none" stroke="#232F3E" stroke-width="1.3" stroke-dasharray="3 3"/>
+  <path d="M560,310 C 620,380 680,460 708,522" fill="none" stroke="#232F3E" stroke-width="1.3" stroke-dasharray="3 3"/>
+
+  <!-- AZ-a Public subnet -->
+  <rect x="110" y="365" width="360" height="110" rx="8" fill="#E8F4FD" stroke="#2E7DD1" stroke-width="1.5"/>
+  <text x="125" y="386" font-size="12" font-weight="700" fill="#0C447C">Public subnet  ·  10.0.1.0/24</text>
+  <rect x="140" y="400" width="64" height="44" rx="6" fill="#FFFFFF" stroke="#2E7DD1" stroke-width="1.5"/>
+  <line x1="152" y1="418" x2="192" y2="418" stroke="#2E7DD1" stroke-width="1.5"/>
+  <polygon points="192,418 184,413 184,423" fill="#2E7DD1"/>
+  <polygon points="152,418 160,413 160,423" fill="#2E7DD1"/>
+  <text x="215" y="416" font-size="11" font-weight="600" fill="#0C447C">NAT gateway</text>
+  <text x="215" y="431" font-size="10" fill="#5F6B7A">Elastic IP attached</text>
+  <text x="125" y="463" font-size="10" fill="#5F6B7A">Route table → 0.0.0.0/0 via internet gateway</text>
+
+  <!-- AZ-b Public subnet -->
+  <rect x="530" y="365" width="360" height="110" rx="8" fill="#E8F4FD" stroke="#2E7DD1" stroke-width="1.5"/>
+  <text x="545" y="386" font-size="12" font-weight="700" fill="#0C447C">Public subnet  ·  10.0.2.0/24</text>
+  <text x="545" y="412" font-size="11" fill="#5F6B7A">No NAT in this subnet —</text>
+  <text x="545" y="428" font-size="11" fill="#5F6B7A">outbound routed via AZ-a NAT gateway</text>
+  <text x="545" y="463" font-size="10" fill="#5F6B7A">Route table → 0.0.0.0/0 via internet gateway</text>
+
+  <!-- AZ-a Private subnet -->
+  <rect x="110" y="490" width="360" height="170" rx="8" fill="#E8F8ED" stroke="#3C9A3C" stroke-width="1.5"/>
+  <text x="125" y="511" font-size="12" font-weight="700" fill="#1F5C1F">Private subnet  ·  10.0.3.0/24</text>
+  <rect x="130" y="524" width="320" height="96" rx="8" fill="none" stroke="#3C9A3C" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="140" y="539" font-size="10" fill="#1F5C1F">Security group: eks_cluster_sg</text>
+  <polygon points="312,568 301,588 279,588 268,568 279,548 301,548" fill="#DCEEFF" stroke="#2E7DD1" stroke-width="1.5"/>
+  <text x="290" y="573" text-anchor="middle" font-size="9" fill="#0C447C">EKS</text>
+  <text x="290" y="606" text-anchor="middle" font-size="11" font-weight="600" fill="#232F3E">Worker node</text>
+  <text x="125" y="650" font-size="10" fill="#5F6B7A">Node group: devops-node-group (t2.large)</text>
+
+  <!-- AZ-b Private subnet -->
+  <rect x="530" y="490" width="360" height="170" rx="8" fill="#E8F8ED" stroke="#3C9A3C" stroke-width="1.5"/>
+  <text x="545" y="511" font-size="12" font-weight="700" fill="#1F5C1F">Private subnet  ·  10.0.4.0/24</text>
+  <rect x="550" y="524" width="320" height="96" rx="8" fill="none" stroke="#3C9A3C" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="560" y="539" font-size="10" fill="#1F5C1F">Security group: eks_cluster_sg</text>
+  <polygon points="732,568 721,588 699,588 688,568 699,548 721,548" fill="#DCEEFF" stroke="#2E7DD1" stroke-width="1.5"/>
+  <text x="710" y="573" text-anchor="middle" font-size="9" fill="#0C447C">EKS</text>
+  <text x="710" y="606" text-anchor="middle" font-size="11" font-weight="600" fill="#232F3E">Worker node</text>
+  <text x="545" y="650" font-size="10" fill="#5F6B7A">Scaling: desired 2 / min 1 / max 3</text>
+
+  <!-- Node -> RDS dashed connectors -->
+  <path d="M290,590 L290,640 L330,705" fill="none" stroke="#3C9A3C" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <path d="M710,590 L710,640 L670,705" fill="none" stroke="#3C9A3C" stroke-width="1.3" stroke-dasharray="4 3"/>
+  <text x="500" y="695" text-anchor="middle" font-size="10" fill="#5F6B7A">port 3306</text>
+
+  <!-- RDS -->
+  <rect x="200" y="705" width="600" height="95" rx="10" fill="#FFFFFF" stroke="#232F3E" stroke-width="1.5"/>
+  <ellipse cx="250" cy="725" rx="26" ry="9" fill="#EAF1FB" stroke="#232F3E" stroke-width="1.5"/>
+  <rect x="224" y="725" width="52" height="34" fill="#EAF1FB" stroke="none"/>
+  <line x1="224" y1="725" x2="224" y2="759" stroke="#232F3E" stroke-width="1.5"/>
+  <line x1="276" y1="725" x2="276" y2="759" stroke="#232F3E" stroke-width="1.5"/>
+  <ellipse cx="250" cy="759" rx="26" ry="9" fill="#EAF1FB" stroke="#232F3E" stroke-width="1.5"/>
+  <text x="300" y="728" font-size="13" font-weight="700" fill="#232F3E">Amazon RDS — MySQL 8.0</text>
+  <text x="300" y="748" font-size="11" fill="#5F6B7A">Instance class: db.t3.micro  ·  Port 3306</text>
+  <text x="300" y="766" font-size="10" fill="#5F6B7A">DB subnet group spans both private subnets (Multi-AZ ready)</text>
+  <text x="300" y="784" font-size="10" fill="#5F6B7A">Security group RDS-SG: inbound 3306 restricted to EKS nodes only</text>
+</svg>
